@@ -1,8 +1,10 @@
+import Chat from "./components/chat/Chat"
+
 function App() {
 
   return (
-    <div className="bg-red-600">
-      Hello World
+    <div className="fullSize flexJIC bg-indigo-200">
+      <Chat />
     </div>
   )
 }

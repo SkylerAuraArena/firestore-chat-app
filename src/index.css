@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.flexJIC{
+    @apply flex justify-center items-center
+}
+
+.fullSize{
+    @apply h-screen w-full
+}
