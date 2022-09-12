@@ -16,12 +16,12 @@ const ChatMessage = (props) => {
 
     if(uid === senderId){
         divMsgCss = `${divCss} justify-end`
-        imgCss = `${logoCss} modalChatColor-sent`
-        msgCss = `${pCss} modalChatColor-sent`
+        imgCss = `${logoCss} bg-indigo-400`
+        msgCss = `${pCss} bg-indigo-400`
     } else {
         divMsgCss = `${divCss}`
-        imgCss = `${logoCss} modalChatColor-received`
-        msgCss = `${pCss} modalChatColor-received`
+        imgCss = `${logoCss} bg-orange-300`
+        msgCss = `${pCss} bg-orange-300`
     }
 
     const trigramme = senderEmail.substr(0,3).toUpperCase()

@@ -1,9 +1,11 @@
 import { addDoc, serverTimestamp } from "firebase/firestore"
 import { useEffect, useRef, useState } from "react"
+import { useAuth } from "../context/AuthContext"
 import ChatMessage from "./ChatMessage"
 
 const Chat = () => {
   
+  const { logout } = useAuth()
   // const { user } = useFirebaseConnectionContext()
   // const [messageRef, messages] = useFirebaseChatFetch()
   // <Chat messageRef={messageRef} messages={messages} user={user} handleClose={handleClose}/> 
@@ -38,8 +40,11 @@ const Chat = () => {
 
   return (
     <div className="h-[95vh] w-80 flexJIC flex-col mx-2 pb-3 bg-whiteBg rounded-3xl sm:w-96">
-      <div className="flex justify-around py-2">
+      <div className="relative flex justify-around py-2">
         <h3 className="w-full mb-8 px-10 py-2 border-b-2 border-slate-300 text-2xl tracking-tight font-semibold">Chat</h3>
+        <div className="absolute left-40 top-2 flexJIC bg-transparent text-exit m-0 px-4 py-2 border-b-0 border-slate-300 sm:left-48">
+            <button className="bg-transparent m-0 p-0 text-2xl tracking-tight font-semibold" onClick={() => logout()}>×</button>
+        </div>
       </div>
       <div className="w-full h-full overflow-y-auto overflow-x-hidden flex flex-col justify-start items-start gap-3 px-3">
         <i className="mt-1" />
