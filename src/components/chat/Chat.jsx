@@ -1,59 +1,68 @@
-import { addDoc, serverTimestamp } from "firebase/firestore"
+import { query, getDocs, orderBy, addDoc, serverTimestamp, onSnapshot } from "firebase/firestore"
 import { useEffect, useRef, useState } from "react"
 import { useAuth } from "../context/AuthContext"
 import ChatMessage from "./ChatMessage"
 
-const Chat = () => {
-  
-  const { logout } = useAuth()
-  // const { user } = useFirebaseConnectionContext()
-  // const [messageRef, messages] = useFirebaseChatFetch()
-  // <Chat messageRef={messageRef} messages={messages} user={user} handleClose={handleClose}/> 
+const getDataFromFirestoreOnce = async(messageRef) => {
+  const q = query(messageRef, orderBy("date"))
+  const querySnapshot = await getDocs(q)
+  return querySnapshot
+}
 
+const Chat = () => {
+  const { logout, currentUser, messageRef } = useAuth()
+  const [messages, setMessages] = useState(null)
+  const [newMsg, setNewMsg] = useState("")
   const inputRef = useRef()
   const chatDummyDiv = useRef()
-  const [newMsg, setNewMsg] = useState("")
 
   const sendMessage = async () => {
-      newMsg && await addDoc(messageRef, { date: serverTimestamp(), message: newMsg, senderId: user.uid, senderEmail: user.email })
+      newMsg && await addDoc(messageRef, { date: serverTimestamp(), message: newMsg, senderId: currentUser.uid, senderEmail: currentUser.email })
       inputRef.current.value = ""
       setNewMsg("")
   }
 
-  // useEffect(() => {
-  //     chatDummyDiv.current.scrollIntoView({ behavior: "smooth" })
-  // }, [messages])
+  useEffect(() => {
+    const q = query(messageRef, orderBy("date"))
+    const unsuscribe = onSnapshot(q, (querySnapshot) => {
+        const msgList = []
+        querySnapshot.forEach((doc, index) => {
+          const msg = doc.data()
+          const newMsg = { 
+            key: doc.id,
+            date: msg.date,
+            user: currentUser.displayName,
+            message: msg,
+           }
+           msgList.push(newMsg)
+        })
+        setMessages(msgList)
+    });
+    return () => {
+        unsuscribe();
+    }
+}, [])
 
   useEffect(() => {
-    const keyDownHandler = event => {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        sendMessage();
-      }
-    };
-    document.addEventListener('keydown', keyDownHandler);
-    return () => {
-      document.removeEventListener('keydown', keyDownHandler);
-    };
-  }, []);
-
+    chatDummyDiv.current.scrollIntoView({ behavior: "smooth" })
+  }, [messages])
 
   return (
-    <div className="h-[95vh] w-80 flexJIC flex-col mx-2 pb-3 bg-whiteBg rounded-3xl sm:w-96">
-      <div className="relative flex justify-around py-2">
-        <h3 className="w-full mb-8 px-10 py-2 border-b-2 border-slate-300 text-2xl tracking-tight font-semibold">Chat</h3>
-        <div className="absolute left-40 top-2 flexJIC bg-transparent text-exit m-0 px-4 py-2 border-b-0 border-slate-300 sm:left-48">
+    <div className="h-[95vh] w-80 flexJIC flex-col mx-2 pb-3 bg-whiteBg rounded-3xl sm:w-[400px]">
+      <div className="grid grid-cols-8 justify-around py-2">
+        <h3 className="col-start-4 col-span-2 w-full flexJIC px-10 py-2 border-b-2 border-slate-300 text-2xl tracking-tight font-semibold">Chat</h3>
+        <div className="col-start-7 col-span-2 flexJIC bg-transparent text-exit m-0 px-4 py-2 border-b-0 border-slate-300">
             <button className="bg-transparent m-0 p-0 text-2xl tracking-tight font-semibold" onClick={() => logout()}>×</button>
         </div>
       </div>
-      <div className="w-full h-full overflow-y-auto overflow-x-hidden flex flex-col justify-start items-start gap-3 px-3">
+      <div className="w-full h-full overflow-y-auto overflow-x-hidden flex flex-col justify-start items-start gap-3 px-3 -mt-2">
         <i className="mt-1" />
-        {/* {
-          messages && messages.map((msg, index) => (
-            <ChatMessage key={index} date={msg.date} user={user} message={msg} />
+        {
+          messages && messages.map(msg => (
+            <ChatMessage key={msg.key} date={msg.date} user={msg.user} message={msg.message} />
           ))
-        } */}
-        <div ref={chatDummyDiv}></div>
+        }
+        <div className="mt-3" ref={chatDummyDiv}></div>
       </div>
       <div className="flex flex-row justify-center items-center gap-2 w-full mt-2 px-2 pb-2 sm:pb-0">
         <textarea
@@ -65,6 +74,7 @@ const Chat = () => {
           value={newMsg}
           placeholder="Votre message..."
           onChange={e => setNewMsg(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && sendMessage()}
         />
         <div className="flex justify-center items-center bg-indigo-400 border-indigo-500 border-2 cursor-pointer w-12 h-full rounded-full hover:bg-whiteBg">
           <i onClick={sendMessage}>🕊️</i>

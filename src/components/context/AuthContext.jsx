@@ -1,7 +1,7 @@
 import { useState, useEffect, createContext, useContext, useMemo, useCallback } from "react"
 import { auth } from "../../firebase-confg"
 import { onAuthStateChanged, signOut, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
-import { setDoc, doc, getDoc } from "firebase/firestore"
+import { collection, setDoc, doc, getDoc } from "firebase/firestore"
 import { db } from "../../firebase-confg"
 
 const AuthContext = createContext(null)
@@ -9,6 +9,7 @@ const AuthContext = createContext(null)
 const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const messageRef = useMemo(() => collection(db, "messages"),[])  
 
   useEffect(() => {
     authCheck()
@@ -56,6 +57,7 @@ const AuthContextProvider = ({ children }) => {
       signInWithGoogle,
       logout,
       ifNewCreateUserInFirestoreDatabase,
+      messageRef,
     }),
     [
       currentUser,
