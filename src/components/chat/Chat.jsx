@@ -55,11 +55,11 @@ const Chat = () => {
             <button className="bg-transparent m-0 p-0 text-2xl tracking-tight font-semibold" onClick={() => logout()}>×</button>
         </div>
       </div>
-      <div className="w-full h-full overflow-y-auto overflow-x-hidden flex flex-col justify-start items-start gap-3 px-3 -mt-2">
+      <div className="w-full h-full overflow-y-auto overflow-x-hidden flex flex-col justify-start items-start gap-3 px-2 -mt-2">
         <i className="mt-1" />
         {
           messages && messages.map(msg => (
-            <ChatMessage key={msg.key} date={msg.date} user={msg.user} message={msg.message} />
+            <ChatMessage key={msg.key} date={msg.date} user={currentUser} sender={msg.user} message={msg.message} />
           ))
         }
         <div className="mt-3" ref={chatDummyDiv}></div>

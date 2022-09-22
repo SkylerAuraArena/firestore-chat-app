@@ -15,7 +15,7 @@ const AuthContextProvider = ({ children }) => {
     authCheck()
 
     return () => {
-      authCheck
+      authCheck()
     }
   }, [auth])
   

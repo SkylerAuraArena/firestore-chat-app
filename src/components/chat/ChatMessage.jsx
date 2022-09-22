@@ -4,7 +4,7 @@ const ChatMessage = (props) => {
     const [msgTxt, setMsgTxt] = useState(`${props.message.message}`)
     const dateMsg = props.date ? props.date.toDate().toLocaleString() : "Récupération depuis le serveur en cours..."
     const uid = props.user ? props.user.uid : null
-
+ 
     const divCss = "flex items-center gap-1 w-full text-white"
     const logoCss = "flex justify-center items-center w-12 h-12 rounded-full"
     const pCss = "leading-6 px-3 py-3 rounded-3xl max-w-full break-all"
