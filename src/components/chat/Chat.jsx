@@ -66,7 +66,7 @@ const Chat = () => {
             <ChatMessage key={msg.key} date={msg.date} user={currentUser} sender={msg.user} message={msg.message} />
           ))
         }
-        <div className="mt-3" ref={chatDummyDiv}></div>
+        <div className="mt-1" ref={chatDummyDiv}></div>
       </div>
       <div className="flex flex-row justify-center items-center gap-2 w-full mt-2 px-2 pb-2 sm:pb-0">
         <textarea
