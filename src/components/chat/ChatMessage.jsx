@@ -9,7 +9,7 @@ const ChatMessage = (props) => {
  
     const divCss = "flex items-center gap-1 w-full text-white"
     const logoCss = "flex justify-center items-center w-12 h-12 rounded-full"
-    const pCss = "leading-6 px-4 py-3 rounded-3xl max-w-full break-all sm:px-3"
+    const pCss = "leading-6 px-4 py-3 rounded-3xl max-w-full break-words sm:px-3"
     const { senderEmail, senderId } = props.message
 
     let divMsgCss = ""
