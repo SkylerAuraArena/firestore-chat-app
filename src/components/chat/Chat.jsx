@@ -37,11 +37,15 @@ const Chat = () => {
            msgList.push(newMsg)
         })
         setMessages(msgList)
-    });
+    })
     return () => {
-        unsuscribe();
+        unsuscribe()
     }
-}, [])
+  }, [])
+
+  useEffect(() => {
+    chatDummyDiv.current.scrollIntoView({ behavior: "smooth" })
+  }, [])
 
   useEffect(() => {
     chatDummyDiv.current.scrollIntoView({ behavior: "smooth" })
